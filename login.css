@@ -1,0 +1,97 @@
+/* Custom styles not covered by Tailwind, or overrides */
+body {
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    /* พื้นหลัง gradient สีเขียวอ่อนไปเข้มจากซ้ายไปขวาที่เคลื่อนไหว */
+    background: linear-gradient(to right, #e8f5e9 0%, #c8e6c9 30%, #a5d6a7 60%, #66bb6a 100%); /* ไล่สีจากเขียวอ่อนไปเขียวเข้มจากซ้ายไปขวา */
+    background-size: 400% 100%; /* ทำให้ขนาดพื้นหลังใหญ่ขึ้นในแนวนอน เพื่อให้เคลื่อนไหวได้ */
+    animation: gradientMove 15s ease infinite; /* ใช้ animation ในการเคลื่อนไหว gradient */
+    color: #333;
+    overflow: hidden; /* ป้องกัน scrollbar ที่อาจเกิดขึ้นจาก gradient */
+}
+
+/* Keyframes สำหรับ animation การเคลื่อนไหวของ gradient */
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 0%; /* เริ่มต้นที่ซ้ายสุด */
+    }
+    50% {
+        background-position: 100% 0%; /* เคลื่อนไปทางขวาสุด */
+    }
+    100% {
+        background-position: 0% 0%; /* วนกลับมาเริ่มต้น */
+    }
+}
+
+.container {
+    /* ทำให้ตรงกลางเด่นขึ้น: เพิ่มเงาที่ลึกขึ้นและขอบที่สังเกตเห็นได้ */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 0 5px rgba(76, 175, 80, 0.2); /* เงาแรกเริ่มที่แข็งแกร่งขึ้นพร้อมขอบเขียวอ่อนๆ */
+    transition: all 0.4s ease-in-out; /* ทำให้การเปลี่ยนผ่านเมื่อ hover ดูกลมกลืน */
+    transform: translateY(0); /* กำหนดสถานะเริ่มต้นของ transform */
+}
+.container:hover {
+    /* เอฟเฟกต์เมื่อนำเมาส์ไปชี้: เงาเข้มขึ้น, สีขอบเปลี่ยน, และยกขึ้นเล็กน้อย */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 8px rgba(67, 160, 71, 0.6); /* เงาที่แข็งแกร่งยิ่งขึ้น, สีเปลี่ยนเป็นสีเขียวที่สดใสขึ้น */
+    transform: translateY(-5px); /* ยกขึ้นเล็กน้อยเมื่อ hover */
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000; /* High z-index to appear on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6); /* Semi-transparent black background */
+    justify-content: center;
+    align-items: center;
+}
+.modal-content-custom {
+    background-color: #fefefe;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    position: relative;
+}
+/* Input fields and password toggle are mostly handled by Tailwind in HTML now */
+.password-group {
+    position: relative;
+    width: 100%; /* Ensure it takes full width of its container */
+}
+.password-group input {
+    padding-right: 2.5rem; /* Space for the eye icon */
+}
+.togglePassword {
+    position: absolute;
+    top: 50%;
+    right: 0.75rem; /* Adjust as needed */
+    transform: translateY(-50%);
+    cursor: pointer;
+    user-select: none;
+    font-size: 1.25rem; /* Tailwind text-xl */
+    color: #6B7280; /* Tailwind text-gray-500 */
+}
+
+/* Animations (if desired, can be added directly or in separate file) */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.animate-fade-in-down {
+    animation: fadeInDown 0.8s ease-out forwards;
+}

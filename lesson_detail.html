@@ -1,0 +1,201 @@
+    <!DOCTYPE html>
+    <html lang="th">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>EduBio - บทเรียน</title>
+        <!-- Tailwind CSS CDN -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        <!-- Custom CSS for lesson detail page -->
+        <link rel="stylesheet" href="lesson_detail.css">
+    </head>
+    <body class="font-inter bg-gray-100 min-h-screen flex flex-col items-center p-6">
+
+        <div class="container bg-white p-10 rounded-2xl shadow-2xl max-w-4xl w-full mx-auto my-8 border border-gray-200">
+            <div class="flex justify-between items-center mb-6 border-b pb-4">
+                <h1 id="lessonTitle" class="text-3xl font-extrabold text-blue-700"></h1>
+                <button id="backToHomeBtn" class="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out">
+                    กลับหน้าหลัก
+                </button>
+            </div>
+
+            <!-- Section for Pre-test -->
+            <div id="preTestSection" class="lesson-section mb-8 p-8 bg-lime-50 rounded-xl shadow-lg border border-lime-100">
+                <h2 class="text-2xl font-bold text-lime-800 mb-4">1. แบบทดสอบก่อนเรียน</h2>
+                <div id="preTestQuestions" class="mb-4">
+                    <!-- Questions will be loaded here by JavaScript -->
+                </div>
+                <button id="submitPreTestBtn" class="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                    ส่งคำตอบ
+                </button>
+                <div id="preTestResult" class="mt-4 p-3 bg-lime-100 rounded-md text-lime-900 hidden">
+                    <!-- Pre-test results will be shown here -->
+                </div>
+                <div class="flex justify-center gap-4 mt-4">
+                    <!-- continueToContentBtn is now for all lessons to proceed to content/kingdom selection -->
+                    <button id="continueToContentBtn" class="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 hidden">
+                        เริ่มเรียน
+                    </button>
+                    <!-- Button to go back to main lessons/home after pre-test -->
+                    <button id="backFromPreTestToHomeBtn" class="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10.293 15.707a1 1 0 010-1.414L7.414 11H16a1 1 0 110 2H7.414l2.879 2.879a1 1 0 01-1.414 1.414l-4.5-4.5a1 1 0 010-1.414l4.5-4.5a1 1 0 011.414 1.414L7.414 9H16a1 1 0 110 2H7.414l2.879 2.879a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                        กลับสู่บทเรียนหลัก
+                    </button>
+                </div>
+            </div>
+
+            <!-- Section for Taxonomy Introduction (NEW for general taxonomy videos) -->
+            <div id="taxonomyIntroSection" class="lesson-section mb-8 p-8 bg-emerald-50 rounded-xl shadow-lg border border-emerald-100 hidden">
+                <h2 id="generalIntroTitle" class="text-2xl font-bold text-emerald-800 mb-4"></h2>
+                <div id="generalIntroContent" class="prose max-w-none">
+                    <!-- General introduction text and videos will be loaded here by JavaScript -->
+                </div>
+                <div class="flex justify-between items-center mt-6">
+                    <!-- NEW: Button to go back to pre-test from taxonomy intro -->
+                    <button id="backToPreTestFromTaxonomyIntroBtn" class="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10.293 15.707a1 1 0 010-1.414L7.414 11H16a1 1 0 110 2H7.414l2.879 2.879a1 1 0 01-1.414 1.414l-4.5-4.5a1 1 0 010-1.414l4.5-4.5a1 1 0 011.414 1.414L7.414 9H16a1 1 0 110 2H7.414l2.879 2.879a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                        ย้อนกลับแบบทดสอบก่อนเรียน
+                    </button>
+                    <button id="startTaxonomyLessonBtn" class="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                        เริ่มเรียนการจำแนกสิ่งมีชีวิต
+                    </button>
+                </div>
+            </div>
+
+            <!-- Section for Kingdom Selection (NEW) -->
+            <div id="kingdomSelectionSection" class="lesson-section mb-8 p-8 bg-amber-50 rounded-xl shadow-lg border border-amber-100 hidden">
+                <h2 class="text-2xl font-bold text-amber-800 mb-4">2. เลือกอาณาจักรเพื่อเรียนรู้</h2>
+                <div id="kingdomSelectionIntro" class="text-gray-700 mb-6">
+                    <!-- Introduction text for kingdom selection from JS -->
+                </div>
+                <div id="kingdomCardsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Kingdom cards will be rendered here by JavaScript -->
+                </div>
+                <button id="backFromKingdomSelectionToTaxonomyIntroBtn" class="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-6 rounded-full transition duration-300 ease-in-out mt-6">
+                    ย้อนกลับการจำแนกสิ่งมีชีวิต
+                </button>
+            </div>
+
+            <!-- Section for Lesson Content (now specifically for a selected kingdom) -->
+            <div id="contentSection" class="lesson-section mb-8 p-8 bg-teal-50 rounded-xl shadow-lg border border-teal-100 hidden">
+                <h2 id="kingdomContentTitle" class="text-2xl font-bold text-teal-800 mb-4"></h2> <!-- Title for the selected kingdom -->
+                <div id="lessonContent" class="prose max-w-none">
+                    <!-- Lesson content (text, video, slides) for the selected kingdom will be loaded here by JavaScript -->
+                </div>
+                <div class="flex justify-between items-center mt-4">
+                    <button id="backToKingdomSelectionBtn" class="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-6 rounded-full transition duration-300 ease-in-out">
+                        ย้อนกลับเลือกอาณาจักร
+                    </button>
+                    <button id="finishContentBtn" class="bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                        ทำแบบทดสอบหลังเรียน
+                    </button>
+                </div>
+            </div>
+
+            <!-- Section for Post-test -->
+            <div id="postTestSection" class="lesson-section mb-8 p-8 bg-green-100 rounded-xl shadow-lg border border-green-200 hidden">
+                <h2 class="text-2xl font-bold text-green-800 mb-4">3. แบบทดสอบหลังเรียน</h2>
+                <div id="postTestQuestions" class="mb-4">
+                    <!-- Questions will be loaded here by JavaScript -->
+                </div>
+                <button id="submitPostTestBtn" class="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                    ส่งคำตอบ
+                </button>
+                <div id="postTestResult" class="mt-4 p-3 bg-green-100 rounded-md text-green-900 hidden">
+                    <!-- Post-test results will be shown here -->
+                </div>
+                <button id="viewScoresBtn" class="bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 mt-4 hidden">
+                    ดูสรุปคะแนน
+                </button>
+            </div>
+
+            <!-- Section for Score Summary -->
+            <div id="scoreSummarySection" class="lesson-section p-8 bg-yellow-50 rounded-xl shadow-lg border border-yellow-100 hidden">
+                <h2 class="text-2xl font-bold text-yellow-800 mb-4">สรุปคะแนน</h2>
+                <p class="text-lg text-gray-700 mb-2">คะแนนก่อนเรียน: <span id="preScoreSummary" class="font-bold"></span></p>
+                <p class="text-lg text-gray-700">คะแนนหลังเรียน: <span id="postScoreSummary" class="font-bold"></span></p>
+                <button id="returnToHomeFromSummaryBtn" class="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out mt-6">
+                    กลับหน้าหลัก
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Message Box for alerts -->
+        <div class="message-box fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 hidden" id="messageBox">
+            <div class="message-box-content bg-white p-8 rounded-lg shadow-xl w-11/12 max-w-md text-center">
+                <h2 id="messageBoxTitle" class="text-2xl font-bold text-gray-800 mb-4"></h2>
+                <p id="messageBoxBody" class="text-gray-700 mb-6"></p>
+                <button id="messageBoxCloseBtn" class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out">
+                    ตกลง
+                </button>
+            </div>
+        </div>
+
+        <!-- Placeholder for Chat Module -->
+        <div id="chat-module-placeholder"></div>
+
+        <!-- Custom JavaScript for lesson detail page -->
+        <script type="module" src="lesson_detail.js"></script>
+        <script type="module">
+            // Load chat module HTML
+            fetch('chat_module.html')
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('chat-module-placeholder').innerHTML = html;
+                    // Dynamically import chat_module.js after HTML is loaded
+                    import('./chat_module.js')
+                        .then(module => {
+                            // Call the initChatModule function from the imported module
+                            if (typeof module.initChatModule === 'function') {
+                                module.initChatModule();
+                            }
+                            // Pass lessonsData context to chat module.
+                            // window.lessonsData is already global from lesson_detail.js
+                            if (typeof module.setChatContext === 'function' && typeof window.lessonsData !== 'undefined') {
+                                // On lesson detail page, pass the entire lessonsData structure
+                                // so AI can answer about current lesson and other potential lessons.
+                                module.setChatContext(window.lessonsData); 
+                            } else {
+                                console.warn("window.lessonsData not fully available for chat context. AI might have limited context.");
+                            }
+                        })
+                        .catch(error => console.error('Error loading chat_module.js:', error));
+                })
+                .catch(error => console.error('Error loading chat_module.html:', error));
+            
+            // Event listener for the new back button from pre-test to home
+            document.getElementById('backFromPreTestToHomeBtn')?.addEventListener('click', () => {
+                window.location.href = 'home.html';
+            });
+
+            // Event listener for the new back button from taxonomy intro to pre-test
+            document.getElementById('backToPreTestFromTaxonomyIntroBtn')?.addEventListener('click', () => {
+                document.querySelectorAll('.lesson-section').forEach(section => section.classList.add('hidden'));
+                document.getElementById('preTestSection').classList.remove('hidden');
+                
+                // IMPORTANT: Call the function to reload/render pre-test questions
+                // You need to ensure 'loadPreTestQuestions' is available globally
+                // or imported correctly in lesson_detail.js
+                // If lessonsData is needed, ensure it's accessible.
+                const urlParams = new URLSearchParams(window.location.search);
+                const lessonId = urlParams.get('id'); // Get the lessonId from URL
+                if (typeof loadPreTestQuestions === 'function' && lessonId) {
+                    loadPreTestQuestions(lessonId); // Call the function to load questions
+                } else {
+                    console.error("loadPreTestQuestions function or lessonId not found.");
+                    // Optionally display a message to the user that something went wrong
+                }
+            });
+
+            // Ensure the backToHomeBtn at the top works as expected
+            document.getElementById('backToHomeBtn')?.addEventListener('click', () => {
+                window.location.href = 'home.html';
+            });
+        </script>
+    </body>
+    </html>

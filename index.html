@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduBio - ยินดีต้อนรับ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for login page, complementing Tailwind */
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            /* พื้นหลัง gradient สีเขียวอ่อนไปเข้มจากซ้ายไปขวาที่เคลื่อนไหว */
+            background: linear-gradient(to right, #e8f5e9 0%, #c8e6c9 30%, #a5d6a7 60%, #66bb6a 100%); /* ไล่สีจากเขียวอ่อนไปเขียวเข้มจากซ้ายไปขวา */
+            background-size: 400% 100%; /* ทำให้ขนาดพื้นหลังใหญ่ขึ้นในแนวนอน เพื่อให้เคลื่อนไหวได้ */
+            animation: gradientMove 15s ease infinite; /* ใช้ animation ในการเคลื่อนไหว gradient */
+            color: #333;
+            overflow: hidden; /* ป้องกัน scrollbar ที่อาจเกิดขึ้นจาก gradient */
+        }
+
+        /* Keyframes สำหรับ animation การเคลื่อนไหวของ gradient */
+        @keyframes gradientMove {
+            0% {
+                background-position: 0% 0%; /* เริ่มต้นที่ซ้ายสุด */
+            }
+            50% {
+                background-position: 100% 0%; /* เคลื่อนไปทางขวาสุด */
+            }
+            100% {
+                background-position: 0% 0%; /* วนกลับมาเริ่มต้น */
+            }
+        }
+
+        .container {
+            /* ทำให้ตรงกลางเด่นขึ้น: เพิ่มเงาที่ลึกขึ้นและขอบที่สังเกตเห็นได้ */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 0 5px rgba(76, 175, 80, 0.2); /* เงาแรกเริ่มที่แข็งแกร่งขึ้นพร้อมขอบเขียวอ่อนๆ */
+            transition: all 0.4s ease-in-out; /* ทำให้การเปลี่ยนผ่านเมื่อ hover ดูกลมกลืน */
+            transform: translateY(0); /* กำหนดสถานะเริ่มต้นของ transform */
+        }
+        .container:hover {
+            /* เอฟเฟกต์เมื่อนำเมาส์ไปชี้: เงาเข้มขึ้น, สีขอบเปลี่ยน, และยกขึ้นเล็กน้อย */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 8px rgba(67, 160, 71, 0.6); /* เงาที่แข็งแกร่งยิ่งขึ้น, สีเปลี่ยนเป็นสีเขียวที่สดใสขึ้น */
+            transform: translateY(-5px); /* ยกขึ้นเล็กน้อยเมื่อ hover */
+        }
+
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1000; /* High z-index to appear on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6); /* Semi-transparent black background */
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content-custom {
+            background-color: #fefefe;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+        }
+        /* Input fields and password toggle are mostly handled by Tailwind in HTML now */
+        .password-group {
+            position: relative;
+            width: 100%;
+        }
+        .password-group input {
+            padding-right: 2.5rem;
+        }
+        .togglePassword {
+            position: absolute;
+            top: 50%;
+            right: 0.75rem;
+            transform: translateY(-50%);
+            cursor: pointer;
+            user-select: none;
+            font-size: 1.25rem;
+            color: #6B7280;
+        }
+
+        /* Animations (if desired, can be added directly or in separate file) */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-down {
+            animation: fadeInDown 0.8s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="font-inter">
+
+    <div class="container bg-white p-12 rounded-3xl shadow-2xl text-center max-w-md w-full mx-4 animate-fade-in-down">
+        <h1 class="text-5xl font-extrabold mb-10 text-green-700">EduBio</h1> <!-- เปลี่ยนเป็น text-green-700 -->
+        <p class="text-xl text-gray-600 mb-8">แหล่งเรียนรู้ชีววิทยาออนไลน์ของคุณ</p>
+        <button id="signupBtn" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 mb-6 w-full text-xl">
+            สมัครสมาชิก
+        </button>
+        <button id="loginBtn" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 w-full text-xl">
+            เข้าสู่ระบบ
+        </button>
+    </div>
+
+    <!-- Sign Up Modal -->
+    <div class="modal" id="signupModal">
+        <div class="modal-content-custom">
+            <h2 class="text-3xl font-bold mb-6 text-gray-800">สมัครสมาชิก</h2>
+            <input type="text" placeholder="ชื่อผู้ใช้" id="signupUsername" class="block w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"> <!-- เปลี่ยนเป็น focus:ring-green-400 -->
+            <input type="email" placeholder="อีเมล" id="signupEmail" class="block w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"> <!-- เปลี่ยนเป็น focus:ring-green-400 -->
+            
+            <div class="password-group relative mb-4">
+                <input type="password" placeholder="รหัสผ่าน" id="signupPassword" class="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"> <!-- เปลี่ยนเป็น focus:ring-green-400 -->
+                <span class="togglePassword absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-xl text-gray-500">👁️</span>
+            </div>
+            <div class="password-group relative mb-6">
+                <input type="password" placeholder="ยืนยันรหัสผ่าน" id="signupConfirmPassword" class="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"> <!-- เปลี่ยนเป็น focus:ring-green-400 -->
+                <span class="togglePassword absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-xl text-gray-500">👁️</span>
+            </div>
+
+            <button id="signupSubmit" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 mb-3 w-full">
+                สมัครสมาชิก
+            </button>
+            <button class="closeBtn bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 w-full">
+                ปิด
+            </button>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content-custom">
+            <h2 class="text-3xl font-bold mb-6 text-gray-800">เข้าสู่ระบบ</h2>
+            <button id="googleLogin" class="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold py-3 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 mb-4 w-full flex items-center justify-center">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google icon" class="w-5 h-5 mr-2">
+                เข้าสู่ระบบด้วย Google
+            </button>
+            <div class="relative flex py-5 items-center">
+                <div class="flex-grow border-t border-gray-300"></div>
+                <span class="flex-shrink mx-4 text-gray-500 text-sm">หรือ</span>
+                <div class="flex-grow border-t border-gray-300"></div>
+            </div>
+            <input type="email" placeholder="อีเมล" id="loginEmail" class="block w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"> <!-- เปลี่ยนเป็น focus:ring-green-400 -->
+            
+            <div class="password-group relative mb-6">
+                <input type="password" placeholder="รหัสผ่าน" id="loginPassword" class="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"> <!-- เปลี่ยนเป็น focus:ring-green-400 -->
+                <span class="togglePassword absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-xl text-gray-500">👁️</span>
+            </div>
+
+            <button id="loginSubmit" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 mb-3 w-full">
+                เข้าสู่ระบบ
+            </button>
+            <button class="closeBtn bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105 w-full">
+                ปิด
+            </button>
+        </div>
+    </div>
+
+    <!-- Message Modal -->
+    <div class="modal" id="messageModal">
+        <div class="modal-content-custom">
+            <h2 id="messageModalTitle" class="text-2xl font-bold mb-6 text-gray-800"></h2>
+            <p id="messageModalBody" class="text-gray-700"></p>
+            <button id="messageModalCloseBtn" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-xl transition duration-300 ease-in-out transform hover:scale-105 w-full">
+                ตกลง
+            </button>
+        </div>
+    </div>
+
+    <!-- Custom JavaScript for login page -->
+    <script type="module" src="login.js"></script>
+</body>
+</html>

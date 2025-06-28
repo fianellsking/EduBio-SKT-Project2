@@ -1,0 +1,106 @@
+/* Custom styles not covered by Tailwind, or overrides */
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(to bottom right, #e0f2fe, #bbdefb); /* Light blue gradient */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    color: #333;
+}
+.container {
+    background-color: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.lesson-card {
+    background-color: #f0f9ff; /* Very light blue for cards */
+    border: 1px solid #d0eeff;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%; /* Ensure cards in grid have equal height */
+}
+.lesson-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    background-color: #e6f7ff; /* Slightly darker on hover */
+}
+.lesson-card-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    color: #2196f3; /* Blue icon */
+}
+.lesson-card h3 {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #1a202c; /* Dark text for heading */
+}
+.lesson-card p {
+    font-size: 1.1rem;
+    color: #4a5568; /* Gray text for description */
+    line-height: 1.6;
+}
+.message-box {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+}
+.message-box-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 30px;
+    border: 1px solid #888;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    position: relative;
+}
+.message-box-content h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #333;
+}
+.message-box-content p {
+    margin-bottom: 25px;
+    font-size: 1.1rem;
+    color: #555;
+}
+.message-box-content button {
+    background-color: #4facfe;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+.message-box-content button:hover {
+    background-color: #00c3ff;
+}

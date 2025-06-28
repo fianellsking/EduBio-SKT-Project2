@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduBio - หน้าหลัก</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles not covered by Tailwind, or overrides */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to bottom right, #2eda6a, #03e428); /* Light green gradient */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 800px; /* Adjusted max-width for a single prominent card */
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1, h2, h3 {
+            color: #1a202c; /* Darker headings */
+        }
+        button {
+            transition: all 0.3s ease;
+            border-radius: 0.75rem; /* rounded-xl for consistency */
+            font-weight: 600; /* font-semibold for consistency */
+        }
+        button:hover {
+            transform: scale(1.05); /* Slightly scale up on hover */
+        }
+        .lesson-card {
+            background-color: #f0fdf4; /* Very light green for cards */
+            border: 1px solid #bbf7d0;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+            width: 100%; /* Ensure it takes full width when only one */
+        }
+        .lesson-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            background-color: #dcfce7; /* Slightly darker green on hover */
+        }
+        .lesson-card-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #16a34a; /* Green icon */
+        }
+        .lesson-card h3 {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #14532d; /* Dark green text for heading */
+        }
+        .lesson-card p {
+            font-size: 1.1rem;
+            color: #22c55e; /* Green text for description */
+            line-height: 1.6;
+        }
+        .message-box, .profile-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+        }
+        .message-box-content, .profile-modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 30px;
+            border: 1px solid #888;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+        }
+        .message-box-content h2, .profile-modal-content h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .message-box-content p, .profile-modal-content p {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            color: #555;
+        }
+        /* Buttons for general UI elements (logout, messageBoxCloseBtn) */
+        .message-box-content button {
+            background-color: #4ade80; /* Light green for general buttons */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .message-box-content button:hover {
+            background-color: #22c55e; /* Darker green on hover */
+        }
+        /* Profile modal buttons specific styling */
+        .profile-modal-content .save-btn { /* Use a specific class for save button */
+            background-color: #10b981; /* Emerald green for save */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .profile-modal-content .save-btn:hover {
+            background-color: #059669; /* Darker emerald green on hover */
+        }
+        .profile-modal-content .cancel-btn { /* Use a specific class for cancel button */
+            background-color: #9ca3af; /* Gray for cancel */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .profile-modal-content .cancel-btn:hover {
+            background-color: #6b7280; /* Darker gray on hover */
+        }
+
+        .profile-modal-content input {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        /* Chat module specific styles for typing indicator */
+        .typing-indicator .dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981; /* Green for AI typing */
+            border-radius: 50%;
+            display: inline-block;
+            animation: bounce 1s infinite ease-in-out;
+        }
+
+        .typing-indicator .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+    </style>
+</head>
+<body class="font-inter">
+
+    <div class="container mt-8">
+        <div class="w-full flex justify-between items-center mb-8">
+            <h1 class="text-4xl font-extrabold text-green-700">EduBio</h1>
+            <div class="flex items-center space-x-4">
+                <span id="userGreeting" class="text-xl font-medium text-gray-700"></span>
+                <button id="editProfileBtn" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-5 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
+                    แก้ไขโปรไฟล์
+                </button>
+                <button id="logoutBtn" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-5 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
+                    ออกจากระบบ
+                </button>
+            </div>
+        </div>
+
+        <h2 class="text-3xl font-bold mb-10 text-gray-800">เลือกบทเรียน</h2>
+        
+        <div class="grid grid-cols-1 gap-8 w-full"> <div class="lesson-card group" data-lesson="taxonomy">
+                <span class="lesson-card-icon">🌿</span>
+                <h3>อนุกรมวิธาน</h3>
+                <p>ศึกษาการจัดหมวดหมู่สิ่งมีชีวิต, หลักการตั้งชื่อ, และความสัมพันธ์ทางวิวัฒนาการ.</p>
+            </div>
+            </div>
+    </div>
+
+    <div class="message-box" id="messageBox">
+        <div class="message-box-content">
+            <h2 id="messageBoxTitle"></h2>
+            <p id="messageBoxBody"></p>
+            <button id="messageBoxCloseBtn">ตกลง</button>
+        </div>
+    </div>
+
+    <div class="profile-modal" id="profileModal">
+        <div class="profile-modal-content">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">แก้ไขโปรไฟล์</h2>
+            <div class="mb-4 text-left">
+                <label for="profileFullNameInput" class="block text-gray-700 text-sm font-bold mb-2">ชื่อ-นามสกุล:</label>
+                <input type="text" id="profileFullNameInput" placeholder="ชื่อ-นามสกุลของคุณ" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div class="mb-4 text-left">
+                <label for="profileClassInput" class="block text-gray-700 text-sm font-bold mb-2">ห้องเรียน:</label>
+                <input type="text" id="profileClassInput" placeholder="ห้องเรียนของคุณ (เช่น ม.4/1)" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div class="mb-4 text-left">
+                <label for="profileNumberInput" class="block text-gray-700 text-sm font-bold mb-2">เลขที่:</label>
+                <input type="number" id="profileNumberInput" placeholder="เลขที่ของคุณ (เช่น 1, 2, 3)" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div class="mb-4 text-left">
+                <label for="profileStudentIdInput" class="block text-gray-700 text-sm font-bold mb-2">เลขประจำตัว:</label>
+                <input type="number" id="profileStudentIdInput" placeholder="เลขประจำตัวนักเรียนของคุณ" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <button id="saveProfileBtn" class="save-btn font-semibold py-2 px-5 rounded-xl transition duration-300 ease-in-out transform hover:scale-105 mb-3 w-full">
+                บันทึก
+            </button>
+            <button id="closeProfileModalBtn" class="cancel-btn font-semibold py-2 px-5 rounded-xl transition duration-300 ease-in-out transform hover:scale-105 w-full">
+                ยกเลิก
+            </button>
+        </div>
+    </div>
+
+    <div id="chat-module-placeholder"></div>
+
+    <script type="module" src="home.js"></script>
+    <script type="module">
+        // Load chat module HTML
+        fetch('chat_module.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('chat-module-placeholder').innerHTML = html;
+                // Dynamically import chat_module.js after HTML is loaded
+                import('./chat_module.js')
+                    .then(module => {
+                        // Call the initChatModule function from the imported module
+                        if (typeof module.initChatModule === 'function') {
+                            module.initChatModule();
+                        }
+                        // Pass lessonsData context to chat module if needed for home page
+                        if (typeof module.setChatContext === 'function') {
+                            module.setChatContext({}); // No specific lesson context on home page.
+                        }
+                    })
+                    .catch(error => console.error('Error loading chat_module.js:', error));
+            })
+            .catch(error => console.error('Error loading chat_module.html:', error));
+    </script>
+</body>
+</html>

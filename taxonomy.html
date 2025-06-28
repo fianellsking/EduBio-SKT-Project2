@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduBio - อนุกรมวิธาน</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for consistent look across the app */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to bottom right, #e0f2fe, #bbdefb); /* Light blue gradient */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 1200px; /* Adjusted max-width for wider content */
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1, h2, h3 {
+            color: #1a202c; /* Darker headings */
+        }
+        button {
+            transition: all 0.3s ease;
+            border-radius: 0.75rem; /* rounded-xl for consistency */
+            /* Removed padding here as it will be specified directly on elements */
+            font-weight: 600; /* font-semibold for consistency */
+        }
+        button:hover {
+            transform: scale(1.05); /* Slightly scale up on hover */
+        }
+        .section {
+            width: 100%;
+            display: none; /* Hidden by default, controlled by JS */
+            flex-direction: column;
+            align-items: center;
+        }
+        .section.active {
+            display: flex; /* Show active section */
+        }
+        .question-item {
+            background-color: #f0f9ff;
+            border: 1px solid #d0eeff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+        .question-item.correct {
+            background-color: #d1fae5; /* Green for correct */
+            border-color: #34d399;
+        }
+        .question-item.incorrect {
+            background-color: #fee2e2; /* Red for incorrect */
+            border-color: #f87171;
+        }
+        .options-group label {
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        .options-group label:hover {
+            background-color: #e2e8f0; /* Light gray on hover */
+        }
+        .options-group input[type="radio"]:disabled + span {
+            color: #6b7280; /* Dim disabled text */
+        }
+        .video-responsive {
+            overflow: hidden;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            position: relative;
+            height: 0;
+            width: 100%;
+        }
+        .video-responsive iframe {
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            border-radius: 10px; /* Rounded corners for iframe */
+        }
+        .message-box {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+        }
+        .message-box-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 30px;
+            border: 1px solid #888;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+        }
+        .message-box-content h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .message-box-content p {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            color: #555;
+        }
+        .message-box-content button {
+            background-color: #4facfe;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .message-box-content button:hover {
+            background-color: #00c3ff;
+        }
+        /* Styles for kingdom cards to match home page aesthetic more */
+        .kingdom-card {
+            background-color: #f0f9ff; /* Very light blue for cards */
+            border: 1px solid #d0eeff;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%; /* Ensure cards in grid have equal height */
+            /* Adjusted width for all cards to be roughly equal in a 2-column layout on large screens */
+            width: calc(50% - 12px); /* Default to 2 columns with gap on larger screens, for consistent width */
+        }
+
+        .kingdom-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            background-color: #e6f7ff; /* Slightly darker on hover */
+        }
+        .kingdom-card-icon { /* New style for icons */
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #2196f3; /* Blue icon */
+        }
+        .kingdom-card h3 {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #1a202c; /* Dark text for heading */
+        }
+        .kingdom-card p {
+            font-size: 1.1rem;
+            color: #4a5568; /* Gray text for description */
+            line-height: 1.6;
+        }
+        /* New styles for the detail header to resemble home page */
+        .detail-header {
+            text-align: center;
+            margin-bottom: 2.5rem; /* Equivalent to mb-10 */
+            max-width: 600px; /* Adjust as needed */
+            width: 100%;
+        }
+        .detail-header h2 {
+            font-size: 2.25rem; /* text-3xl */
+            font-weight: 700; /* font-bold */
+            margin-bottom: 1rem; /* mb-4 */
+            color: #1a202c; /* text-gray-800 */
+        }
+        .detail-header p {
+            font-size: 1.25rem; /* text-xl */
+            color: #4a5568; /* text-gray-600 */
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body class="font-inter">
+
+    <div class="container mt-8">
+        <div class="w-full flex justify-between items-center mb-8">
+            <h1 class="text-4xl font-extrabold text-blue-700">EduBio</h1>
+            <div class="flex items-center space-x-4">
+                <button id="backToHomeBtn" class="bg-gray-400 hover:bg-gray-500 text-white py-3 px-6 rounded-full transition duration-300 ease-in-out text-base">
+                    กลับหน้าล็อกอิน
+                </button>
+            </div>
+        </div>
+
+        <h1 id="lessonTitle" class="text-3xl font-bold mb-8 text-gray-800">อนุกรมวิธาน</h1>
+
+        <!-- Pre-Test Section -->
+        <div id="preTestSection" class="section active">
+            <h3 class="text-2xl font-semibold mb-6 text-gray-700">แบบทดสอบก่อนเรียน</h3>
+            <div id="preTestQuestions" class="w-full">
+                <!-- Questions will be rendered here by JavaScript -->
+            </div>
+            <button id="submitPreTestBtn" class="bg-blue-500 hover:bg-blue-600 text-white mt-6 mb-4 w-full md:w-auto py-4 px-10 text-lg">ส่งแบบทดสอบก่อนเรียน</button>
+            <p id="preTestResult" class="text-lg font-bold text-gray-700 hidden"></p>
+            <button id="continueToContentBtn" class="bg-green-500 hover:bg-green-600 text-white mt-4 w-full md:w-auto py-4 px-10 text-lg hidden">ดำเนินการต่อเพื่อเรียนรู้</button>
+        </div>
+
+        <!-- Kingdom Selection Section (Specific to Taxonomy) -->
+        <div id="kingdomSelectionSection" class="section">
+            <button id="backFromKingdomSelectionToPreTestBtn" class="bg-gray-400 hover:bg-gray-500 text-white py-3 px-6 rounded-full mb-6 text-base">
+                &larr; กลับไปแบบทดสอบก่อนเรียน
+            </button>
+            
+            <!-- Detail Header for Kingdom Selection, similar to home page intro -->
+            <div class="detail-header">
+                <h2 class="text-3xl font-bold mb-4 text-gray-800">เลือกอาณาจักรเพื่อเรียนรู้เพิ่มเติม</h2>
+                <div id="kingdomSelectionIntro" class="text-gray-700 text-xl mb-8">
+                    <!-- Introduction text for kingdom selection from JS -->
+                </div>
+            </div>
+            
+            <!-- Modified grid layout to resemble home page, using flexbox for more control -->
+            <div class="w-full flex flex-col items-center">
+                <div id="kingdomCardsContainer" class="flex flex-wrap justify-center gap-6 w-full max-w-5xl">
+                    <!-- Cards will be dynamically inserted here by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Section (for specific Kingdom content) -->
+        <div id="contentSection" class="section">
+            <button id="backToKingdomSelectionBtn" class="bg-gray-400 hover:bg-gray-500 text-white py-3 px-6 rounded-full mb-6 text-base">
+                &larr; กลับไปเลือกอาณาจักร
+            </button>
+            <h3 id="kingdomContentTitle" class="text-2xl font-semibold mb-6 text-gray-700"></h3>
+            <div id="lessonContent" class="prose max-w-none text-gray-800 w-full">
+                <!-- Lesson content (text, video, slides) will be rendered here by JavaScript -->
+            </div>
+            <button id="finishContentBtn" class="bg-blue-500 hover:bg-blue-600 text-white mt-8 mb-4 w-full md:w-auto py-4 px-10 text-lg">จบเนื้อหา ไปทำแบบทดสอบหลังเรียน</button>
+        </div>
+
+        <!-- Post-Test Section -->
+        <div id="postTestSection" class="section">
+            <h3 class="text-2xl font-semibold mb-6 text-gray-700">แบบทดสอบหลังเรียน</h3>
+            <div id="postTestQuestions" class="w-full">
+                <!-- Questions will be rendered here by JavaScript -->
+            </div>
+            <button id="submitPostTestBtn" class="bg-blue-500 hover:bg-blue-600 text-white mt-6 mb-4 w-full md:w-auto py-4 px-10 text-lg">ส่งแบบทดสอบหลังเรียน</button>
+            <p id="postTestResult" class="text-lg font-bold text-gray-700 hidden"></p>
+            <button id="viewScoresBtn" class="bg-purple-500 hover:bg-purple-600 text-white mt-4 w-full md:w-auto py-4 px-10 text-lg hidden">ดูสรุปคะแนน</button>
+        </div>
+
+        <!-- Score Summary Section -->
+        <div id="scoreSummarySection" class="section">
+            <h3 class="text-2xl font-semibold mb-6 text-gray-700">สรุปคะแนนของคุณ</h3>
+            <div class="bg-gray-100 p-6 rounded-lg shadow-md w-full mb-6">
+                <p class="text-xl mb-3"><span class="font-semibold">คะแนนก่อนเรียน:</span> <span id="preScoreSummary" class="text-blue-700"></span></p>
+                <p class="text-xl"><span class="font-semibold">คะแนนหลังเรียน:</span> <span id="postScoreSummary" class="text-green-700"></span></p>
+            </div>
+            <button id="returnToHomeFromSummaryBtn" class="bg-blue-500 hover:bg-blue-600 text-white mt-4 w-full md:w-auto py-4 px-10 text-lg">กลับหน้าล็อกอิน</button>
+        </div>
+    </div>
+
+    <!-- Message Box for alerts -->
+    <div class="message-box" id="messageBox">
+        <div class="message-box-content">
+            <h2 id="messageBoxTitle"></h2>
+            <p id="messageBoxBody"></p>
+            <button id="messageBoxCloseBtn">ตกลง</button>
+        </div>
+    </div>
+
+    <!-- Custom JavaScript for taxonomy lesson page -->
+    <script type="module" src="lesson_detail.js"></script>
+</body>
+</html>
