@@ -78,64 +78,55 @@ function showMessageModal(title, message, callback = null) {
 // Handle authentication state changes
 // This listener remains important for session persistence and initial page load,
 // but for immediate redirection after button click, we'll use the modal callback.
+// ✅ แก้ไขใหม่: ตรวจแค่ user และ redirect เฉพาะกรณีไม่ใช่ anonymous
 onAuthStateChanged(auth, async (user) => {
     if (user) {
-        // User is signed in.
         currentUserId = user.uid;
         console.log("onAuthStateChanged: User is signed in with UID:", user.uid);
 
-        // Store user profile in Firestore if it doesn't exist
-        const userDocRef = doc(db, `artifacts/${appId}/users/${currentUserId}/profiles`, "userProfile");
-        try {
-            const userDocSnap = await getDoc(userDocRef);
-            if (!userDocSnap.exists()) {
-                console.log("User profile does not exist in Firestore. Creating new profile.");
-                await setDoc(userDocRef, {
-                    uid: user.uid,
-                    email: user.email,
-                    displayName: user.displayName || user.email,
-                    createdAt: new Date().toISOString()
-                });
-                console.log("User profile created in Firestore.");
-            } else {
-                console.log("User profile already exists in Firestore.");
+        // ตรวจว่า user เป็น anonymous หรือไม่
+        if (!user.isAnonymous) {
+            // ✅ ตรวจว่ามี profile แล้วหรือยัง
+            const userDocRef = doc(db, `artifacts/${appId}/users/${currentUserId}/profiles`, "userProfile");
+            try {
+                const userDocSnap = await getDoc(userDocRef);
+                if (!userDocSnap.exists()) {
+                    console.log("User profile does not exist in Firestore. Creating new profile.");
+                    await setDoc(userDocRef, {
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: user.displayName || user.email,
+                        createdAt: new Date().toISOString()
+                    });
+                    console.log("User profile created in Firestore.");
+                } else {
+                    console.log("User profile already exists in Firestore.");
+                }
+            } catch (firestoreError) {
+                console.error("Error accessing/writing user profile to Firestore:", firestoreError.message);
+                showMessageModal("ข้อผิดพลาด Firestore", "ไม่สามารถบันทึกข้อมูลผู้ใช้ได้: " + firestoreError.message);
             }
-        } catch (firestoreError) {
-            console.error("Error accessing/writing user profile to Firestore:", firestoreError.message);
-            showMessageModal("ข้อผิดพลาด Firestore", "ไม่สามารถบันทึกข้อมูลผู้ใช้ได้: " + firestoreError.message);
-            // Even if Firestore fails, we might still want to redirect the user
-        }
 
-        // Redirect directly to home.html
-        // Check if the current page is NOT home.html to prevent infinite loops
-        const targetUrl = "home.html"; // Changed target to home.html
-        if (!window.location.href.includes(targetUrl)) {
-            console.log(`onAuthStateChanged: Redirecting to ${targetUrl}...`);
-            window.location.href = targetUrl;
+            // ✅ Redirect เฉพาะถ้าไม่อยู่บนหน้า home อยู่แล้ว
+            const targetUrl = "home.html";
+            if (!window.location.href.includes(targetUrl)) {
+                console.log(`Redirecting to ${targetUrl}...`);
+                window.location.href = targetUrl;
+            } else {
+                console.log("Already on home page.");
+            }
         } else {
-            console.log("onAuthStateChanged: Already on target home page. No immediate redirection from here.");
+            console.log("User is anonymous, staying on login page.");
         }
 
     } else {
-        // User is signed out.
         currentUserId = null;
-        console.log("onAuthStateChanged: User is signed out.");
-
-        // Sign in anonymously if no token is available, or use the custom token if provided
-        try {
-            if (initialAuthToken) {
-                await signInWithCustomToken(auth, initialAuthToken);
-                console.log("Signed in with custom token.");
-            } else {
-                await signInAnonymously(auth);
-                console.log("Signed in anonymously.");
-            }
-        } catch (error) {
-            console.error("Authentication error during anonymous/custom token sign-in:", error.message);
-            // showMessageModal("ข้อผิดพลาด", "ไม่สามารถเข้าสู่ระบบอัตโนมัติได้: " + error.message);
-        }
+        console.log("User is signed out.");
+        // ❌ ลบบรรทัด signInAnonymously() ออก เพื่อไม่ auto login
+        // ✅ ให้ผู้ใช้คลิก login เองเท่านั้น
     }
 });
+
 
 // Get DOM elements
 const signupBtn = document.getElementById("signupBtn");
