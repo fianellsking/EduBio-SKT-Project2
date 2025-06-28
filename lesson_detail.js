@@ -1032,6 +1032,7 @@ document.addEventListener('DOMContentLoaded', () => {
         startTaxonomyLessonBtn.addEventListener('click', () => {
             if (currentLessonId === 'taxonomy') {
                 showSection('kingdomSelectionSection');
+                startTaxonomyLessonBtn.textContent = 'เริ่มศึกษาอาณาจักรทั้ง5'
                 renderKingdomSelection();
             }
         });
